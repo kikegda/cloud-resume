@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Resume EGDA</title>
+  <meta charset="UTF-8">
+  <title>Resume EGDA</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Frontend Test</h1>
-        <div class="content">
-            <h1>Hi, this is a test!</h1>
-            <p>Visits: <span id="visitas">...</span></p>
-        </div>
+  <div class="container">
+    <h1>Resume EGDA</h1>
+    <div class="content">
+      <p>Visits: <span id="visitas">...</span></p>
     </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://enriquegdaresume-74700721345.europe-southwest1.run.app";
+
+    // Llama a / para contar la visita
+    fetch(`${API_BASE}/`)
+      .then(() => {
+        // Luego obtiene el número de visitas
+        return fetch(`${API_BASE}/visits`);
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("visitas").textContent = data.count;
+      })
+      .catch(err => {
+        console.error("Error al cargar visitas:", err);
+        document.getElementById("visitas").textContent = "error";
+      });
+  </script>
 </body>
-
-<script>
-    fetch("https://enriquegdaresume-74700721345.europe-southwest1.run.app/")
-        .then(res => res.text())
-        .then(() => {
-            fetch("https://enriquegdaresume-74700721345.europe-southwest1.run.app/visits")
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById("visitas").textContent = data.count;
-                });
-  });
-</script>
-
 </html>
