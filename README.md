@@ -1,6 +1,5 @@
 # Cloud Resume – KikeGDA
 
-👉 [https://enriquegda.dev](https://enriquegda.dev)
 
 This project implements:
 
