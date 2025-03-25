@@ -1,0 +1,15 @@
+# Ignora entorno virtual
+.venv/
+
+# Ignora claves y credenciales
+*.env
+.env
+keys/
+*.json
+
+# Ignora archivos de Python compilados
+__pycache__/
+*.pyc
+
+# Ignora archivos de sistema
+.DS_Store

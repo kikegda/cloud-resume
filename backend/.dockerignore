@@ -1,0 +1,8 @@
+# Ignorar archivos y carpetas sensibles o inútiles
+.env
+keys/
+venv/
+__pycache__/
+*.pyc
+.git
+.dockerignore
