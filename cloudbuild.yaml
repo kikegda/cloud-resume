@@ -1,0 +1,26 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA',
+      './backend'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
+    ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'enriquegdaresume',
+      '--image', 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA',
+      '--region', 'europe-southwest1',
+      '--platform', 'managed',
+      '--allow-unauthenticated'
+    ]
+
+images:
+  - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
