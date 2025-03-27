@@ -1,5 +1,6 @@
 # Ignora entorno virtual
 .venv/
+venv/
 
 # Ignora claves y credenciales
 *.env
