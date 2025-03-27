@@ -1,7 +1,5 @@
-options:
-  logging: CLOUD_LOGGING_ONLY
-
 steps:
+  # Build backend Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
@@ -9,12 +7,14 @@ steps:
       './backend'
     ]
 
+  # Push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
       'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
     ]
 
+  # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
@@ -24,6 +24,15 @@ steps:
       '--platform', 'managed',
       '--allow-unauthenticated'
     ]
+
+  # Deploy frontend to Cloud Storage
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: [
+      '-m', 'rsync', '-r', './frontend', 'gs://enriquegda.dev'
+    ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 images:
   - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
