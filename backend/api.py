@@ -17,4 +17,4 @@ def visits():
 
 @app.route('/prueba')
 def prueba():
-    return 'Prueba'
+    return 'Prueba 3'
