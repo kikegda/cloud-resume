@@ -14,3 +14,7 @@ def hello_world():
 @app.route('/visits')
 def visits():
     return get_visits()
+
+@app.route('/prueba')
+def prueba():
+    return 'Prueba'
