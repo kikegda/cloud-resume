@@ -1,21 +1,8 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 steps:
-  # Instala dependencias del frontend (React + Vite)
-  - name: 'gcr.io/cloud-builders/npm'
-    dir: 'cloud-resume-frontend'
-    args: ['install']
-
-  # Construye el frontend
-  - name: 'gcr.io/cloud-builders/npm'
-    dir: 'cloud-resume-frontend'
-    args: ['run', 'build']
-
-  # Sube el frontend a Cloud Storage
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: [
-      '-m', 'rsync', '-r', 'cloud-resume-frontend/dist', 'gs://enriquegda.dev'
-    ]
-
-  # Construye imagen del backend
+  # Backend: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
@@ -23,14 +10,14 @@ steps:
       './backend'
     ]
 
-  # Sube imagen del backend a Artifact Registry
+  # Backend: Push image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
       'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
     ]
 
-  # Despliega a Cloud Run
+  # 🌐 Backend: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
@@ -41,8 +28,21 @@ steps:
       '--allow-unauthenticated'
     ]
 
+  # Frontend: Install dependencies
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['install']
+
+  # Frontend: Build
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['run', 'build']
+
+  # Frontend: Deploy to Cloud Storage
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: [
+      '-m', 'rsync', '-r', 'frontend/dist', 'gs://enriquegda.dev'
+    ]
+
 images:
   - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
-
-options:
-  logging: CLOUD_LOGGING_ONLY
