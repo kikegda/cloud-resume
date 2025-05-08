@@ -1,5 +1,21 @@
 steps:
-  # Build backend Docker image
+  # Instala dependencias del frontend (React + Vite)
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'cloud-resume-frontend'
+    args: ['install']
+
+  # Construye el frontend
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'cloud-resume-frontend'
+    args: ['run', 'build']
+
+  # Sube el frontend a Cloud Storage
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: [
+      '-m', 'rsync', '-r', 'cloud-resume-frontend/dist', 'gs://enriquegda.dev'
+    ]
+
+  # Construye imagen del backend
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
@@ -7,14 +23,14 @@ steps:
       './backend'
     ]
 
-  # Push image to Artifact Registry
+  # Sube imagen del backend a Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
       'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
     ]
 
-  # Deploy to Cloud Run
+  # Despliega a Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
@@ -25,14 +41,8 @@ steps:
       '--allow-unauthenticated'
     ]
 
-  # Deploy frontend to Cloud Storage
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: [
-      '-m', 'rsync', '-r', './frontend', 'gs://enriquegda.dev'
-    ]
+images:
+  - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
-images:
-  - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
