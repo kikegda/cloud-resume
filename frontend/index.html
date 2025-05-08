@@ -1,81 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enrique García de Alfonso - Resume</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-      text-align: center;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      color: #007BFF;
-    }
-    p {
-      font-size: 1.2rem;
-    }
-    .social-links a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #007BFF;
-      font-weight: bold;
-    }
-    .social-links a:hover {
-      text-decoration: underline;
-    }
-    footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Enrique García de Alfonso</h1>
-    <p>Bienvenido a mi página personal. Aquí puedes encontrar información sobre mí y mis proyectos.</p>
-    <p>Visitas: <span id="visitas">...</span></p>
-    <div class="social-links">
-      <a href="https://github.com/tu-usuario" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/in/tu-usuario" target="_blank">LinkedIn</a>
-      <a href="https://twitter.com/tu-usuario" target="_blank">Twitter</a>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2025 Enrique García de Alfonso. Todos los derechos reservados.
-  </footer>
-
-  <script>
-    const API_BASE = "https://enriquegdaresume-74700721345.europe-southwest1.run.app";
-
-    // Llama a / para contar la visita
-    fetch(`${API_BASE}/`)
-      .then(() => {
-        // Luego obtiene el número de visitas
-        return fetch(`${API_BASE}/visits`);
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("visitas").textContent = data.count;
-      })
-      .catch(err => {
-        console.error("Error al cargar visitas:", err);
-        document.getElementById("visitas").textContent = "error";
-      });
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
