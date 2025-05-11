@@ -1,11 +1,14 @@
 import './App.css'
+import Nabvar from './components/Navbar'
 
 function App() {
 
   return (
     <>
-      <div className="text-3xl font-bold underline">
-        hola esto es una prueba a
+      <Nabvar />
+      <div className="App">
+        <h1>Welcome to My Website</h1>
+        <p>This is a simple React application.</p>
       </div>
     </>
   )
