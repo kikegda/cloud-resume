@@ -6,7 +6,7 @@ venv/
 *.env
 .env
 keys/
-*.json
+
 
 # Ignora archivos de Python compilados
 __pycache__/
