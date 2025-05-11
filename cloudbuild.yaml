@@ -17,7 +17,7 @@ steps:
       'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
     ]
 
-  # 🌐 Backend: Deploy to Cloud Run
+  # Backend: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
@@ -28,21 +28,41 @@ steps:
       '--allow-unauthenticated'
     ]
 
-  # Frontend: Install dependencies
+  # Frontend: Build Vite project
   - name: 'gcr.io/cloud-builders/npm'
     dir: 'frontend'
     args: ['install']
 
-  # Frontend: Build
   - name: 'gcr.io/cloud-builders/npm'
     dir: 'frontend'
     args: ['run', 'build']
 
-  # Frontend: Deploy to Cloud Storage
-  - name: 'gcr.io/cloud-builders/gsutil'
+  # Frontend: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
     args: [
-      '-m', 'rsync', '-r', 'frontend/dist', 'gs://enriquegda.dev'
+      'build',
+      '-t', 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/frontend:$COMMIT_SHA',
+      './frontend'
+    ]
+
+  # Frontend: Push image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/frontend:$COMMIT_SHA'
+    ]
+
+  # Frontend: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'frontend',
+      '--image', 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/frontend:$COMMIT_SHA',
+      '--region', 'europe-southwest1',
+      '--platform', 'managed',
+      '--allow-unauthenticated'
     ]
 
 images:
   - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/enriquegdaresume:$COMMIT_SHA'
+  - 'europe-southwest1-docker.pkg.dev/cloud-resume-454612/cloud-resume-enriquegda/frontend:$COMMIT_SHA'
